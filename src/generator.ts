@@ -78,7 +78,14 @@ export function buildLLMsFullTxt(
   ];
 
   for (const route of routes) {
-    lines.push('', '---', '', `# ${routeTitle(route)}`, '', `URL: ${route.route}`);
+    lines.push(
+      '',
+      '---',
+      '',
+      `# ${routeTitle(route)}`,
+      '',
+      `URL: ${route.route}`,
+    );
     if (route.metadata.description) {
       lines.push('', route.metadata.description);
     }
@@ -108,7 +115,10 @@ async function readPackageJson(
   projectDir: string,
 ): Promise<{ name?: string; description?: string } | undefined> {
   try {
-    const raw = await fs.readFile(path.join(projectDir, 'package.json'), 'utf8');
+    const raw = await fs.readFile(
+      path.join(projectDir, 'package.json'),
+      'utf8',
+    );
     return JSON.parse(raw) as { name?: string; description?: string };
   } catch {
     return undefined;
@@ -136,7 +146,9 @@ function groupBySection(routes: RouteEntry[]): Array<[string, RouteEntry[]]> {
 }
 
 function formatRouteLink(route: RouteEntry): string {
-  const description = route.metadata.description ? `: ${route.metadata.description}` : '';
+  const description = route.metadata.description
+    ? `: ${route.metadata.description}`
+    : '';
   return `* [${routeTitle(route)}](${route.route})${description}`;
 }
 

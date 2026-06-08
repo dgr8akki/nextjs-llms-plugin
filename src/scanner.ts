@@ -40,22 +40,27 @@ export async function scanRoutes(
   for (const root of pagesRoots) {
     const absoluteRoot = path.join(projectDir, root);
     if (await exists(absoluteRoot)) {
-      routes.push(...(await scanPagesRouter(projectDir, absoluteRoot, options)));
+      routes.push(
+        ...(await scanPagesRouter(projectDir, absoluteRoot, options)),
+      );
     }
   }
 
-  const includedRoutes = (options.includeRoutes ?? []).map<RouteEntry>((route) => ({
-    route: normalizeRoute(route.url),
-    filePath: route.url,
-    kind: 'include',
-    metadata: {
-      title: route.title,
-      description: route.description,
-    },
-    section: route.section ?? inferSection(normalizeRoute(route.url), options),
-    optional: route.optional ?? false,
-    content: route.content ?? '',
-  }));
+  const includedRoutes = (options.includeRoutes ?? []).map<RouteEntry>(
+    (route) => ({
+      route: normalizeRoute(route.url),
+      filePath: route.url,
+      kind: 'include',
+      metadata: {
+        title: route.title,
+        description: route.description,
+      },
+      section:
+        route.section ?? inferSection(normalizeRoute(route.url), options),
+      optional: route.optional ?? false,
+      content: route.content ?? '',
+    }),
+  );
 
   return [...routes, ...includedRoutes]
     .filter((route) => !isExcluded(route.route, options.excludeRoutes ?? []))
@@ -80,7 +85,9 @@ async function scanAppRouter(
       return;
     }
 
-    entries.push(await createRouteEntry(projectDir, filePath, route, 'app', options));
+    entries.push(
+      await createRouteEntry(projectDir, filePath, route, 'app', options),
+    );
   });
 
   return entries;
@@ -95,7 +102,10 @@ async function scanPagesRouter(
 
   await walk(root, async (filePath) => {
     const parsed = path.parse(filePath);
-    if (!pageExtensions.has(parsed.ext) || ignoredPageBasenames.has(parsed.name)) {
+    if (
+      !pageExtensions.has(parsed.ext) ||
+      ignoredPageBasenames.has(parsed.name)
+    ) {
       return;
     }
 
@@ -104,7 +114,10 @@ async function scanPagesRouter(
     }
 
     const relative = path.relative(root, filePath);
-    if (relative.startsWith(`api${path.sep}`) || relative.includes(`${path.sep}api${path.sep}`)) {
+    if (
+      relative.startsWith(`api${path.sep}`) ||
+      relative.includes(`${path.sep}api${path.sep}`)
+    ) {
       return;
     }
 
@@ -113,7 +126,9 @@ async function scanPagesRouter(
       return;
     }
 
-    entries.push(await createRouteEntry(projectDir, filePath, route, 'pages', options));
+    entries.push(
+      await createRouteEntry(projectDir, filePath, route, 'pages', options),
+    );
   });
 
   return entries;
@@ -168,9 +183,11 @@ function appPathToRoute(relativeDirectory: string): string {
 function pagesPathToRoute(relativeFile: string): string {
   const parsed = path.parse(relativeFile);
   const withoutExtension = path.join(parsed.dir, parsed.name);
-  const segments = toRouteSegments(withoutExtension).filter((segment, index, list) => {
-    return !(segment === 'index' && index === list.length - 1);
-  });
+  const segments = toRouteSegments(withoutExtension).filter(
+    (segment, index, list) => {
+      return !(segment === 'index' && index === list.length - 1);
+    },
+  );
 
   return segmentsToRoute(segments);
 }
@@ -208,8 +225,13 @@ function segmentsToRoute(segments: string[]): string {
 }
 
 function inferSection(route: string, options: LLMsTxtOptions): string {
-  for (const [prefix, section] of Object.entries(options.sectionMapping ?? {})) {
-    if (route === normalizeRoute(prefix) || route.startsWith(`${normalizeRoute(prefix)}/`)) {
+  for (const [prefix, section] of Object.entries(
+    options.sectionMapping ?? {},
+  )) {
+    if (
+      route === normalizeRoute(prefix) ||
+      route.startsWith(`${normalizeRoute(prefix)}/`)
+    ) {
       return section;
     }
   }
@@ -244,7 +266,9 @@ function normalizeRoute(route: string): string {
 }
 
 function isExcluded(route: string, excludeRoutes: string[]): boolean {
-  return excludeRoutes.some((pattern) => globMatch(route, normalizeRoute(pattern)));
+  return excludeRoutes.some((pattern) =>
+    globMatch(route, normalizeRoute(pattern)),
+  );
 }
 
 function globMatch(value: string, pattern: string): boolean {

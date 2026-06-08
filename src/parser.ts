@@ -75,7 +75,9 @@ function parseExportedMetadata(source: string): RouteMetadata {
   }
 
   return {
-    title: findStringProperty(objectLiteral, 'title') ?? findNestedDefaultTitle(objectLiteral),
+    title:
+      findStringProperty(objectLiteral, 'title') ??
+      findNestedDefaultTitle(objectLiteral),
     description: findStringProperty(objectLiteral, 'description'),
   };
 }
@@ -129,14 +131,22 @@ function findMetadataObject(source: string): string | undefined {
   return undefined;
 }
 
-function findStringProperty(objectLiteral: string, key: string): string | undefined {
-  const property = new RegExp(`(?:^|[,\\n\\r])\\s*${key}\\s*:\\s*(['"\`])([\\s\\S]*?)\\1`, 'm');
+function findStringProperty(
+  objectLiteral: string,
+  key: string,
+): string | undefined {
+  const property = new RegExp(
+    `(?:^|[,\\n\\r])\\s*${key}\\s*:\\s*(['"\`])([\\s\\S]*?)\\1`,
+    'm',
+  );
   const match = objectLiteral.match(property);
   return match?.[2]?.trim();
 }
 
 function findNestedDefaultTitle(objectLiteral: string): string | undefined {
-  const titleObject = objectLiteral.match(/(?:^|[,\n\r])\s*title\s*:\s*\{([\s\S]*?)\}/m);
+  const titleObject = objectLiteral.match(
+    /(?:^|[,\n\r])\s*title\s*:\s*\{([\s\S]*?)\}/m,
+  );
   if (!titleObject) {
     return undefined;
   }

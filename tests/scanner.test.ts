@@ -42,7 +42,10 @@ We build tools.`,
       sectionMapping: { '/docs': 'Documentation' },
     });
 
-    expect(routes.map((route) => route.route)).toEqual(['/about', '/docs/getting-started']);
+    expect(routes.map((route) => route.route)).toEqual([
+      '/about',
+      '/docs/getting-started',
+    ]);
     expect(routes[1].section).toBe('Documentation');
     expect(routes[1].metadata).toEqual({
       title: 'Getting started',

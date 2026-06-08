@@ -7,7 +7,9 @@ const repoRoot = process.cwd();
 const appDir = await mkdtemp(path.join(tmpdir(), 'nextjs-llms-plugin-smoke-'));
 
 try {
-  await mkdir(path.join(appDir, 'app/docs/getting-started'), { recursive: true });
+  await mkdir(path.join(appDir, 'app/docs/getting-started'), {
+    recursive: true,
+  });
 
   await writeFile(
     path.join(appDir, 'package.json'),
@@ -85,10 +87,16 @@ export default function GettingStartedPage() {
   await run('npm', ['run', 'build'], appDir);
 
   const llmsTxt = await readFile(path.join(appDir, 'public/llms.txt'), 'utf8');
-  const llmsFullTxt = await readFile(path.join(appDir, 'public/llms-full.txt'), 'utf8');
+  const llmsFullTxt = await readFile(
+    path.join(appDir, 'public/llms-full.txt'),
+    'utf8',
+  );
 
   assertIncludes(llmsTxt, '# Smoke Site');
-  assertIncludes(llmsTxt, '* [Smoke Home](/): The generated homepage metadata.');
+  assertIncludes(
+    llmsTxt,
+    '* [Smoke Home](/): The generated homepage metadata.',
+  );
   assertIncludes(
     llmsTxt,
     '* [Getting Started](/docs/getting-started): Set up the smoke application.',
@@ -111,7 +119,9 @@ function run(command, args, cwd) {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`${command} ${args.join(' ')} exited with code ${code}`));
+        reject(
+          new Error(`${command} ${args.join(' ')} exited with code ${code}`),
+        );
       }
     });
   });

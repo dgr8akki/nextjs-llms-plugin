@@ -8,7 +8,9 @@ import { generateLLMsTxt } from '../src/generator';
 
 describe('generateLLMsTxt', () => {
   it('writes llms.txt and llms-full.txt', async () => {
-    const projectDir = await fs.mkdtemp(path.join(os.tmpdir(), 'llms-generate-'));
+    const projectDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'llms-generate-'),
+    );
 
     await fs.mkdir(path.join(projectDir, 'app'), { recursive: true });
     await fs.writeFile(
@@ -30,11 +32,11 @@ describe('generateLLMsTxt', () => {
     });
 
     expect(result.files).toHaveLength(2);
-    expect(await fs.readFile(path.join(projectDir, 'public/llms.txt'), 'utf8')).toContain(
-      '* [Home](/): Welcome page.',
-    );
-    expect(await fs.readFile(path.join(projectDir, 'public/llms-full.txt'), 'utf8')).toContain(
-      'URL: /',
-    );
+    expect(
+      await fs.readFile(path.join(projectDir, 'public/llms.txt'), 'utf8'),
+    ).toContain('* [Home](/): Welcome page.');
+    expect(
+      await fs.readFile(path.join(projectDir, 'public/llms-full.txt'), 'utf8'),
+    ).toContain('URL: /');
   });
 });

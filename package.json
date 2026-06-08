@@ -34,6 +34,10 @@
     "plugin"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgr8akki/nextjs-llms-plugin.git"
+  },
   "peerDependencies": {
     "next": ">=13"
   },
